@@ -1,18 +1,18 @@
-name: Deploy Flutter Web to GitHub Pages
+name: Configura deploy GitHub Pages
 
 on:
   push:
     branches:
       - main
-  workflow_dispatch:
 
+# 1. I PERMESSI SONO OBBLIGATORI per evitare l'errore "Not Found"
 permissions:
   contents: read
   pages: write
   id-token: write
 
 concurrency:
-  group: pages
+  group: "pages"
   cancel-in-progress: true
 
 jobs:
@@ -20,21 +20,21 @@ jobs:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout
+      - name: Checkout del codice
         uses: actions/checkout@v4
 
-      - name: Setup Pages
+      - name: Configura GitHub Pages
         uses: actions/configure-pages@v5
 
-      - name: Upload artifact
+      # 2. CARICA SOLO I FILE DELLA PWA FLUTTER GENERATI SU WEB
+      - name: Carica l'artefatto
         uses: actions/upload-pages-artifact@v3
         with:
-          path: build/web
+          path: 'build/web'
 
-      - name: Deploy to GitHub Pages
+      # 3. PUBBLICA IL SITO
+      - name: Deploy su GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
